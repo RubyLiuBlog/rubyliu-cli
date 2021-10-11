@@ -1,0 +1,6 @@
+node_modules
+build
+.vscode
+.idea
+# 测试文件夹
+test
