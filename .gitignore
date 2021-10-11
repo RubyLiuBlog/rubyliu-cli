@@ -4,3 +4,4 @@ build
 .idea
 # 测试文件夹
 test
+*.log
