@@ -1,9 +1,14 @@
 const path = require('path')
 const fs = require('fs-extra')
-const Generator = require('./generator') 
-module.exports = async function (name, options) {
-  // 执行创建命令
+const Generator = require('./generator')
+const { validationOption } = require('../config/index')
 
+module.exports = async function (name, options) {
+  // 验证账号等信息是否存在
+  const exist = await validationOption()
+  if(!exist) {
+    return;
+  }
   // 当前命令行的目录
   const cwd = process.cwd();
   // 需要创建的目录地址
@@ -37,7 +42,6 @@ module.exports = async function (name, options) {
         // 移除已存在的目录
         console.log(`\r\nRemoving...`)
         await fs.remove(targetDir)
-       
       }
     }
   }

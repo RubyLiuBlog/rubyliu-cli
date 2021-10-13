@@ -7,7 +7,10 @@ program
   // -f or --force 为强制创建，如果创建的目录存在则直接覆盖
   .option('-f, --force', 'overwrite target directory if it exist')
   .action((name, options) => {
-    // 打印执行结果
+
+    // 验证账号
+
+    // 调用create 值
     require('../lib/create.js')(name,options)
   })
   
@@ -23,6 +26,7 @@ program
   .option('-g, --get <path>', 'get value from option')
   .option('-s, --set <path> <value>')
   .option('-d, --delete <path>', 'delete option from config')
+  .option('-l, --list', 'get all option')
   .action((value, options) => {
     console.log(value, options)
   })
