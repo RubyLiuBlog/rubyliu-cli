@@ -2,15 +2,29 @@
   "name": "rubyliu-cli",
   "version": "1.0.0",
   "description": "this is  rubyliu cli",
+  "homepage": "https://github.com/RubyLiuBlog/rubyliu-cli",
   "bin": {
     "rubyliu": "src/bin/cli.js"
+  },
+  "author": {
+    "name": "RubyLiu",
+    "email": "liulubingjava@163.com"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "react",
     "cli",
-    "react with tools"
+    "react tools",
+    "rubyliu-cli",
+    "脚手架",
+    "nodejs",
+    "码云"
   ],
-  "author": "RubyLiu",
   "license": "MIT",
   "dependencies": {
     "axios": "^0.22.0",
@@ -22,5 +36,8 @@
     "ini": "^2.0.0",
     "inquirer": "^8.2.0",
     "ora": "5.4.1"
+  },
+  "engines": {
+    "node": ">= 10.0.0"
   }
 }

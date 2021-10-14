@@ -4,7 +4,7 @@ const { switchOption, validationOption } = require('../config/index.js');
 
 program
   // 定义命令和参数
-  .command('create <app-name>')
+  .command('create <project-name>')
   .description('create a new project')
   // -f or --force 为强制创建，如果创建的目录存在则直接覆盖
   .option('-f, --force', 'overwrite target directory if it exist')
@@ -28,9 +28,9 @@ program
 program
   .command('config [value]')
   .description('inspect and modify the config')
-  .option('-g, --get <path>', 'get value from option')
-  .option('-s, --set <path> <value>')
-  .option('-d, --delete <path>', 'delete option from config')
+  .option('-g, --get <key>', 'get value from option')
+  .option('-s, --set <key> <value>')
+  .option('-d, --delete <key>', 'delete option from config')
   .option('-l, --list', 'get all option')
   .action((value, options) => {
     const action = Object.keys(options)[0]
