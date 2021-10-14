@@ -4,7 +4,8 @@ const path = require('path')
 const chalk = require('chalk')
 const clone = require('git-clone/promise');
 const fs = require('fs-extra')
-const { getToken, getRepoList,getTagList } = require('./http') 
+const { getToken, getRepoList,getTagList } = require('./http'); 
+const { getAllOption } = require('../config');
 
 /**
  * 加载动画
@@ -30,14 +31,10 @@ async function wrapLoading(fn,message, ...args) {
 }
 
 class Generator {
-  constructor(name,targetDir){
+  constructor (name,targetDir){
     this.name = name;
     this.targetDir = targetDir;
-    this.client_id = 'f85843aafad45d44fde5e598aa5b86168494ae2cfd9d2cf037fd56043aa1a10b';
-    this.client_secret = 'ff8c7ff21e97088e40625dcff5ca5c595ee0b664e0c52d6b816a4ad4d0a9268a'
     this.token = ''
-    this.username = ''
-    this.password = ''
   }
 
   /**
@@ -46,31 +43,26 @@ class Generator {
    */
   async getRepo() {
     let result = ''
-    const promptList = [{
-      type: 'input',
-      message: '请输入用户名',
-      name: 'username',
-      default: 'liulubingjava@163.com'
-    },{
-      type: 'password',
-      message: '请输入密码',
-      name: 'password',
-      default: 'z123456'
-    }]
-    const {username,password} = await inquirer.prompt(promptList)
     try {
-      // 1.拿token )
-      const res = await wrapLoading(getToken,'获取token',username,password,this.client_id,this.client_secret)
+      // 1.获取参数
+      const tmpObj = await getAllOption()
+      this.username = tmpObj.username
+      this.password = tmpObj.password
+      this.client_id = tmpObj.client_id
+      this.client_secret = tmpObj.client_secret
+      // 2.拿token
+      const res = await wrapLoading(getToken,'获取token',this.username,this.password,this.client_id,this.client_secret)
       this.token = res.access_token
-
-      this.username = username.replace('@','%40')
-      this.password = password
+      this.username = this.username.replace('@','%40')
     } catch (error) {
-      console.log('token 请求出错-->',error)
+      throw new Error('get token faild')
     }
     try {
       // 2.拿仓库
       const repos = await wrapLoading(getRepoList,"获取仓库",this.token)
+      if(!repos || repos.length === 0){
+        throw new Error('get repo faild')
+      }
       // 3.转化成选项
       const repoList = repos.map((item,key) => {
         return {
@@ -85,10 +77,9 @@ class Generator {
         choices: repoList,
         message: "请选择一个模版"
       })
-      console.log('请选择一个模版---->',repo)
       result =  repo;
     } catch (error) {
-      console.log('repoList 请求出错了-->',error)
+      throw new Error(error)
     }
     return result
   }
@@ -140,10 +131,12 @@ class Generator {
    * 创建
    */
   async create() {
-    const repo = await this.getRepo()
-    const tag = await this.getTag(repo)
-    // 下载模版到目录
     try {
+      // 获取仓库
+      const repo = await this.getRepo()
+      // 获取标签
+      const tag = await this.getTag(repo)
+      // 下载模版到目录
       await this.downloadGitRepo(repo,tag)
       console.log(`\r\n The  [${chalk.cyan(this.name)}] project created successfully `)
       console.log(`\r\n  cd ${chalk.cyan(this.name)}`)

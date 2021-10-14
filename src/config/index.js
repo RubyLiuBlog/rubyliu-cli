@@ -3,28 +3,47 @@ const inquirer = require ('inquirer')
 const fs = require('fs-extra')
 const chalk = require('chalk')
 const path = require('path')
-const optionFilePath = path.resolve(__dirname,'constants.js')
+const optionFilePath = path.resolve(__dirname,'../../constants.ini')
+
+async function isExist(params) {
+  return await fs.exists(optionFilePath)
+}
 
 async function getOption(key) {
+  if (! await isExist()) {
+    return ''
+  }
   let ops = await fs.readFile(optionFilePath,'utf8')
-  ops = decode(tmp)[key]
+  ops = decode(ops)[key]
   return ops ? ops : ''
 }
 
 async function getAllOption() {
+  if (! await isExist()) {
+    return {}
+  }
   let ops = await fs.readFile(optionFilePath,'utf8')
   ops = decode(ops)
   return ops ? ops : {}
 }
 
 async function setOption(key,value) {
-  let ops = await fs.readFile(optionFilePath,'utf8')
-  ops = decode(ops)
-  Object.assign(ops, { [key]: value });
-  await fs.writeFile(optionFilePath,encode(ops, 'utf8'))
+  let ops = {}
+  if (await isExist()) {
+    ops = await fs.readFile(optionFilePath,'utf8')
+    ops = decode(ops)
+    Object.assign(ops, { [key]: value });
+  }
+  else {
+    ops = {[key]: value}
+  }
+  await fs.writeFile(optionFilePath,encode(ops), 'utf8')
 }
 
 async function removeOption(key) {
+  if (! await isExist()) {
+    return ''
+  }
   let opts = await fs.readFile(optionFilePath, 'utf8');
   opts = decode(opts);
   if (opts[key]){
@@ -35,30 +54,56 @@ async function removeOption(key) {
 
 async function validationOption() {
   try {
+    if(! await isExist()) {
+      await fs.createFile(optionFilePath,encode({}),'utf8')
+    }
     const requiredList = ['username','password','client_id','client_secret']
     let opts = await fs.readFile(optionFilePath, 'utf8');
     opts = decode(opts);
     const keys = Object.keys(opts) || []
-    console.log('1keys---->',keys)
     // 过滤出缺失的属性
-    let missList = requiredList.filter(item => keys.indexOf(item) === -1)
-    console.log('2.missList',missList)
-    const promptList =  missList.map(item => (
-      {
-        type: 'input',
-        name: item,
-        message: `please input ${item}`
-      }
-    ))
-    console.log('3.promptList',promptList)
-    const result = await inquirer.prompt(promptList)
-    // 合并属性
-    Object.assign(opts,result)
-    await fs.writeFile(optionFilePath, encode(opts), 'utf8');
+    let missList = requiredList.filter(item => keys.indexOf(item) < 0)
+    // 如果有缺失
+    if (missList.length > 0) {
+      const promptList =  missList.map(item => (
+        {
+          type: 'input',
+          name: item,
+          message: `please input ${item}`
+        }
+      ))
+      const result = await inquirer.prompt(promptList)
+      // 合并属性
+      Object.assign(opts,result)
+      await fs.writeFile(optionFilePath, encode(opts), 'utf8');
+    }
     return true
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return false
+  }
+}
+
+async function switchOption(action,key,value) {
+  switch (action) {
+    case 'get': {
+      let result = await getOption(key);
+      console.log(result);
+      break;
+    }
+    case 'set': 
+      setOption(key,value);
+      break;
+    case 'delete':
+      removeOption(key);
+      break;
+    case 'list':
+      let result = await getAllOption();
+      console.log(result);
+      break;
+    default:
+      console.log('please input rbuyliu config -h for help');
+      break;
   }
 }
 module.exports = {
@@ -66,5 +111,6 @@ module.exports = {
   setOption,
   removeOption,
   getAllOption,
-  validationOption
+  validationOption,
+  switchOption
 }

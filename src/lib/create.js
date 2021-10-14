@@ -1,5 +1,6 @@
 const path = require('path')
 const fs = require('fs-extra')
+const inquirer = require('inquirer')
 const Generator = require('./generator')
 const { validationOption } = require('../config/index')
 

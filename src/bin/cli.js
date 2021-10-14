@@ -1,17 +1,22 @@
 #! /usr/bin/env node
 const program = require('commander');
+const { switchOption, validationOption } = require('../config/index.js');
+
 program
   // 定义命令和参数
   .command('create <app-name>')
   .description('create a new project')
   // -f or --force 为强制创建，如果创建的目录存在则直接覆盖
   .option('-f, --force', 'overwrite target directory if it exist')
-  .action((name, options) => {
+  .action(async (name, options) => {
 
     // 验证账号
-
-    // 调用create 值
-    require('../lib/create.js')(name,options)
+    if (await validationOption()){
+      // 调用create 值
+      require('../lib/create.js')(name,options)
+    }else{
+      console.log('params error,plase try again')
+    }
   })
   
 program
@@ -28,7 +33,9 @@ program
   .option('-d, --delete <path>', 'delete option from config')
   .option('-l, --list', 'get all option')
   .action((value, options) => {
-    console.log(value, options)
+    const action = Object.keys(options)[0]
+    const key = options[action]
+    switchOption(action,key,value)
   })
 
 // 配置 ui 命令

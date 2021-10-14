@@ -5,3 +5,5 @@ build
 # 测试文件夹
 test
 *.log
+# 配置文件
+constants.ini
