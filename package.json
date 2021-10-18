@@ -1,10 +1,13 @@
 {
   "name": "rubyliu-cli",
-  "version": "1.0.0",
-  "description": "this is  rubyliu cli",
-  "homepage": "https://github.com/RubyLiuBlog/rubyliu-cli",
+  "version": "0.1.1",
+  "description": "this is rubyliu cli",
   "bin": {
     "rubyliu": "src/bin/cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RubyLiuBlog/rubyliu-cli.git"
   },
   "author": {
     "name": "RubyLiu",
@@ -36,8 +39,5 @@
     "ini": "^2.0.0",
     "inquirer": "^8.2.0",
     "ora": "5.4.1"
-  },
-  "engines": {
-    "node": ">= 10.0.0"
   }
 }
