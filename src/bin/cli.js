@@ -47,6 +47,19 @@ program
     console.log(option)
   })
 
+// 配置彩票命令
+program
+  .command('lt')
+  .option('-w, --welfare <value>', 'Get welfare lottery number')
+  .option('-s, --sports <value>', 'Get sports lottery number')
+  .option('-a, --all <value>', 'Get All lottery number')
+  .description('get lottery tiket number')
+  .action((options) => {
+    const action = Object.keys(options)[0]
+    const value = options[action]
+    require('../lib/ticket/index')(action,value)
+  })
+
 program
 // 监听 --help 执行
 .on('--help', () => {
