@@ -31,6 +31,15 @@ Options:
   -l, --list               get all option
   -h, --help               display help for command
 ```
+3. Lottry Ticket
+```
+Options:
+  -w, --welfare <value>  Get welfare lottery number
+  -s, --sports <value>   Get sports lottery number
+  -a, --all <value>      Get All lottery number
+  -h, --help             display help for command
+```
+4. 
 #### Contribution
 1.  Fork the repository
 2.  Create feature_xxx branch
