@@ -5,11 +5,11 @@ const chalk = require('chalk')
 const path = require('path')
 const optionFilePath = path.resolve(__dirname,'../../constants.ini')
 
-async function isExist(params) {
+export async function isExist(params) {
   return await fs.exists(optionFilePath)
 }
 
-async function getOption(key) {
+export async function getOption(key) {
   if (! await isExist()) {
     return ''
   }
@@ -18,7 +18,7 @@ async function getOption(key) {
   return ops ? ops : ''
 }
 
-async function getAllOption() {
+export async function getAllOption() {
   if (! await isExist()) {
     return {}
   }
@@ -27,7 +27,7 @@ async function getAllOption() {
   return ops ? ops : {}
 }
 
-async function setOption(key,value) {
+export async function setOption(key,value) {
   let ops = {}
   if (await isExist()) {
     ops = await fs.readFile(optionFilePath,'utf8')
@@ -40,7 +40,7 @@ async function setOption(key,value) {
   await fs.writeFile(optionFilePath,encode(ops), 'utf8')
 }
 
-async function removeOption(key) {
+export async function removeOption(key) {
   if (! await isExist()) {
     return ''
   }
@@ -52,7 +52,7 @@ async function removeOption(key) {
   }
 }
 
-async function validationOption() {
+export async function validationOption() {
   try {
     if(! await isExist()) {
       await fs.createFile(optionFilePath,encode({}),'utf8')
@@ -84,7 +84,7 @@ async function validationOption() {
   }
 }
 
-async function switchOption(action,key,value) {
+export async function switchOption(action,key,value) {
   switch (action) {
     case 'get': {
       let result = await getOption(key);
@@ -105,12 +105,4 @@ async function switchOption(action,key,value) {
       console.log('please input rbuyliu config -h for help');
       break;
   }
-}
-module.exports = {
-  getOption,
-  setOption,
-  removeOption,
-  getAllOption,
-  validationOption,
-  switchOption
 }

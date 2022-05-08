@@ -1,6 +1,6 @@
 // #! /usr/bin/env node
 const program = require('commander');
-const { switchOption, validationOption } = require('../config/index.js');
+import { switchOption, validationOption } from '../config/index.js';
 
 program
   // 定义命令和参数

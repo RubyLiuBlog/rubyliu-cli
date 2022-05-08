@@ -1,9 +1,9 @@
 {
   "name": "rubyliu-cli",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "this is rubyliu cli",
   "bin": {
-    "rubyliu": "build/cli.js"
+    "rubyliu": "build/bin/cli.js"
   },
   "repository": {
     "type": "git",
@@ -47,6 +47,8 @@
     "@babel/core": "^7.17.10",
     "@babel/preset-env": "^7.17.10",
     "rollup": "^2.72.0",
-    "rollup-plugin-babel": "^4.4.0"
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0"
   }
 }
